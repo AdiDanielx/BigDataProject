@@ -1,77 +1,43 @@
-RegistarationController(java file) -	
+# Backend for Media Management System
 
+## Overview
+This project serves as the backend for a media management system, handling user management, media item operations, user registration, and history. It provides detailed APIs for interacting with user and media item data stored in a MongoDB database.
 
+## Technologies
+- Java
+- Spring Boot (assuming usage for HTTP status responses)
+- MongoDB
+- Oracle Database (used in conjunction with MongoDB)
 
-registerNewUser:
+## Functionalities
 
-This function registers a new user in the system. It checks if the provided username already exists; if not, it inserts the new user into the system with the provided information (username, password, first name, last name, and registration date). If the username already exists, it returns a HttpStatus.CONFLICT response; otherwise, it returns a HttpStatus.OK response.
+### Registration
+- **registerNewUser**: Registers a new user and handles conflicts if the username already exists.
+- **isExistUser**: Checks if a username exists in the system.
+- **validateUser**: Validates user credentials for login purposes.
+- **getNumberOfRegistredUsers**: Retrieves the count of users registered within a specified time frame.
+- **getAllUsers**: Fetches a list of all users from the system.
 
-isExistUser:
+### Media Items
+- **fillMediaItems**: Transfers media item data from an Oracle database to MongoDB.
+- **fillMediaItemsFromUrl**: Imports media item data from a remote CSV file into MongoDB.
+- **getTopNItems**: Retrieves the top N media items based on a specified criterion from MongoDB.
 
-This function checks if a given username already exists in the system. It queries the database to find a user with the provided username and returns true if the user exists; otherwise, it returns false.
+### History
+- **insertToHistory**: Adds a viewing record to user and item history collections in MongoDB.
+- **getHistoryByUser**: Retrieves viewing history for a specified user.
+- **getHistoryByItems**: Retrieves viewing history for a specified media item.
+- **getUsersByItem**: Fetches users who have viewed a particular media item.
+- **getItemsSimilarity**: Calculates the Jaccard similarity between viewers of two specified media items.
 
-validateUser:
+## Setup and Running Locally
+1. Ensure Java and MongoDB are installed on your system.
+2. Clone the repository to your local machine.
+3. Navigate to the project directory and compile the Java files. If using Maven or Gradle, run the appropriate build command.
+4. To run the server, use:
+   ```
+   java -jar build/libs/media-management-system.jar
+   ```
 
-This function validates a user's credentials (username and password) by querying the database for a matching entry. If the combination of username and password is found in the system, the function returns true, indicating successful validation; otherwise, it returns false.
-
-getNumberOfRegistredUsers:
-
-This function retrieves the number of registered users in the past days days. It calculates the registration date threshold using the provided number of days and queries the database to count the number of users whose registration date falls within that range.
-
-getAllUsers:
-
-This function retrieves all users registered in the system. It queries the database to retrieve user information (username, password, first name, last name) for all users and constructs an array of User objects. The array is then returned, containing information about all registered users.
-
-These functions collectively handle user registration, validation, information retrieval, and user count calculation in the registration system using a MongoDB database.
-
-
-ItemsController(java file) - 
-
-
-fillMediaItems:
-
-This function copies data from an Oracle database table named MediaItems to the MongoDB database's MediaItems collection. It establishes a connection to the Oracle database, retrieves the items' titles and production years, and inserts them into the MongoDB collection if they don't already exist. It returns a HttpStatus.OK response upon successful completion.
-
-fillMediaItemsFromUrl:
-
-This function reads data from a remote CSV file accessible via an HTTP URL and populates the MongoDB MediaItems collection with the extracted items' titles and production years. It processes each line of the CSV file, parses the title and production year, and inserts them into the MongoDB collection if not already present. It returns a HttpStatus.OK response upon successful completion.
-
-getTopNItems:
-
-This function retrieves the top N items from the MongoDB MediaItems collection. It queries the collection for all items and constructs an array of MediaItems objects containing the titles and production years of the retrieved items. The array is then returned to the caller, containing information about the top N items.
-
-These functions collectively manage the process of populating the MongoDB collection with media item data from both an Oracle database table and a remote CSV file, as well as retrieving a specified number of top items from the collection.
-
-HistoryController(java file)
-
-
-insertToHistory:
-
-This function inserts a record into two MongoDB collections named History_user and History_title. The record consists of a username, title, and a timestamp in milliseconds since 1970. The function checks if the given username and title exist in their respective collections (Users and MediaItems) and, if so, inserts the record into both history collections. It returns an HttpStatus.OK response upon successful insertion.
-
-getHistoryByUser:
-
-This function retrieves an array of HistoryPair objects representing the history of views by a specific user. The function queries the History_user collection for all records associated with the given username and constructs an array of HistoryPair objects containing titles and timestamps. The array is sorted by timestamp in descending order and returned to the caller.
-
-getHistoryByItems:
-
-This function retrieves an array of HistoryPair objects representing the history of views for a specific item (title). It queries the History_title collection for all records associated with the given title and constructs an array of HistoryPair objects containing usernames and timestamps. The array is sorted by timestamp in descending order and returned to the caller.
-
-getUsersByItem:
-
-This function retrieves an array of User objects representing the users who have viewed a specific item (title). It queries the History_title collection for all records associated with the given title, then fetches user information from the Users collection based on the retrieved usernames. The function returns an array of User objects.
-
-getItemsSimilarity:
-
-This function calculates the Jaccard similarity score between the users who have viewed two specified items (titles). It uses the results from getUsersByItem to find the users who have viewed each item and calculates the similarity based on the Jaccard similarity formula. The similarity score is returned as a double value.
-
-These functions together manage the recording of user-item interactions, retrieval of viewing history, calculation of item similarity based on user viewership, and fetching users who have viewed a specific item.
-
-
-
-
-
-
-
-
-
+## Configuration
+- Environment variables for database connections must be set up, including URLs and credentials for MongoDB and Oracle databases.
